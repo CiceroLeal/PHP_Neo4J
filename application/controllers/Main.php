@@ -68,14 +68,12 @@ class Main extends CI_Controller {
             array_push($agentes, $agente);
         }
 
-        $idEvento = $evento->getId();
-
-        $this->neo->add_relation($idEvento, $periodo->getId(), 'periodo');
-        $this->neo->add_relation($idEvento, $localizacao->getId(), 'localizacao');
-        $this->neo->add_relation($idEvento, $tema->getId(), 'tema');
+        $this->neo->add_relation($evento, $periodo, 'periodo');
+        $this->neo->add_relation($evento, $localizacao, 'localizacao');
+        $this->neo->add_relation($evento, $tema, 'tema');
 
         foreach ($agentes as $key => $agente){
-            $this->neo->add_relation($idEvento, $agente->getId(), 'agente');
+            $this->neo->add_relation($evento, $agente, 'agente');
         }
 
         print('Inserção realizada com sucesso');
