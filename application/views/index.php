@@ -6,13 +6,33 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta charset="utf-8">
         <title>Index</title>
         <?php require 'scripts.php' ?>
+        <script src="/assets/index.js" ></script>
     </head>
     <body>
-        <?php
-            echo '<pre>';
-            print_r($pessoas);
-            echo '</pre>';
-        ?>
-
+        <div class="container-fluid">
+        <br>
+        <?php for ($i = 0; $i < count($pessoas); $i++){ ?>
+        <h4>Pessoa <?= $i + 1 ?></h4>
+        <table id="tabela" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Propriedade</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+             <?php
+                foreach ($pessoas[$i] as $prop => $val){
+             ?>
+                    <tr>
+                        <td><?php echo $prop ?></td>
+                        <td><?php echo $val ?></td>
+                    </tr>
+            <?php
+                }?>
+            </tbody>
+        </table>
+         <?php }?>
+        </div>
     </body>
 </html>
