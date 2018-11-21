@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <meta charset="utf-8">
         <title>Index</title>
         <?php require 'scripts.php' ?>
-        <script src="/assets/index.js" ></script>
+        <script src="/grafos/assets/index.js" ></script>
     </head>
     <body>
         <div class="container-fluid">

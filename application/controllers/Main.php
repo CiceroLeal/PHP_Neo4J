@@ -20,8 +20,18 @@ class Main extends CI_Controller {
         $this->load->view('index', $props);
 	}
 
+	public function criar(){
+        $this->load->view('create');
+    }
+
     public function removeNo($id){
 	    $this->neo->remove_node($id);
+    }
+
+    public function inserir(){
+        $form = $this->input->post();
+        print_r($form);
+        die();
     }
 
     public function insereNo(){
