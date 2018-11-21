@@ -30,8 +30,55 @@ class Main extends CI_Controller {
 
     public function inserir(){
         $form = $this->input->post();
-        print_r($form);
-        die();
+
+        $evento = $this->neo->insert('Evento',
+            array(
+                'titulo' => $form['titulo'],
+                'conteudo' => $form['conteudo']
+            )
+        );
+
+        $periodo = $this->neo->insert('Periodo',
+            array(
+                'content' => $form['periodo'],
+            )
+        );
+
+        $localizacao = $this->neo->insert('Localizacao',
+            array(
+                'content' => $form['localizacao'],
+            )
+        );
+
+        $tema = $this->neo->insert('Tema',
+            array(
+                'content' => $form['tema'],
+            )
+        );
+
+        $agentes = array();
+
+        for($i = 0; $i < count($form['agentes']); $i++ ){
+            $agente = $this->neo->insert('Agentes',
+                array(
+                    'content' => $form['agentes'][$i],
+                )
+            );
+
+            array_push($agentes, $agente);
+        }
+
+        $idEvento = $evento->getId();
+
+        $this->neo->add_relation($idEvento, $periodo->getId(), 'periodo');
+        $this->neo->add_relation($idEvento, $localizacao->getId(), 'localizacao');
+        $this->neo->add_relation($idEvento, $tema->getId(), 'tema');
+
+        foreach ($agentes as $key => $agente){
+            $this->neo->add_relation($idEvento, $agente->getId(), 'agente');
+        }
+
+        print('Inserção realizada com sucesso');
     }
 
     public function insereNo(){
