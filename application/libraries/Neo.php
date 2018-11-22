@@ -112,6 +112,11 @@ class Neo {
         $label = $this->client->makeLabel($label);
         return $nodes = $label->getNodes();
     }
+    public function get_label($node_id)
+    {
+        $node = $this->client->getNode($node_id);
+        return $this->client->getLabels($node);
+    }
     public function begin_transaction()
     {
         return $transaction = $this->client->beginTransaction();

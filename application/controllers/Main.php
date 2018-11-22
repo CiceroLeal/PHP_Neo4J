@@ -9,12 +9,15 @@ class Main extends CI_Controller {
     }
 
     public function index(){
-        $nodes = $this->neo->get_label_nodes('Pessoa');
+        $nodes = $this->neo->get_label_nodes('Evento');
 
-        $props['pessoas'] = array();
+        $props['evento'] = array();
 
         foreach ($nodes as $key => $node){
-            array_push($props['pessoas'], $node->getProperties());
+            $evento = $node->getProperties();
+            $evento['id'] = $node->getId();
+
+            array_push($props['evento'], $evento);
         }
 
         $this->load->view('index', $props);
@@ -24,8 +27,30 @@ class Main extends CI_Controller {
         $this->load->view('create');
     }
 
-    public function removeNo($id){
-	    $this->neo->remove_node($id);
+    public function editar($id){
+        $startNode = $this->neo->get_node($id);
+        $rels = $this->neo->get_relations($id);
+
+        $endNodes = array_map(function ($rel) {
+            return $rel->getEndNode();
+        }, $rels);
+
+        $nodes['Agentes'] = array();
+        foreach ($endNodes as $key => $node){
+            $props = $node->getProperties();
+            $label = $this->neo->get_label($node->getId());
+            $labName = $label[0]->getName();
+
+            if($labName == 'Agentes'){
+                array_push($nodes['Agentes'], $props['content']);
+            }else{
+                $nodes[$labName] = $props['content'];
+            }
+        }
+
+        $nodes['Evento'] = $startNode->getProperties();
+
+        $this->load->view('edit', $nodes);
     }
 
     public function inserir(){
@@ -77,17 +102,5 @@ class Main extends CI_Controller {
         }
 
         print('Inserção realizada com sucesso');
-    }
-
-    public function insereNo(){
-        $node = $this->neo->insert('Pessoa',
-            array(
-                'Nome' => 'Pedro Álvares Cabral',
-                'Nascimento' => '1467 ou 1468 Belmonte, Portugal',
-                'Morte' => '1520 (51, 52 ou 53 anos) Santarém, Portugal',
-                'Nacionalidade' => 'Portuguesa',
-                'Ocupação' => 'Navegador e explorador Comandante da frota do Reino de Portugal'
-            )
-        );
     }
 }
