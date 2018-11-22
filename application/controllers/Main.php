@@ -28,12 +28,16 @@ class Main extends CI_Controller {
     }
 
     public function editar($id){
+        $nodes = $this->getNodes($id);
+
+        $this->load->view('edit', $nodes);
+    }
+
+    private function getNodes($id){
         $startNode = $this->neo->get_node($id);
         $rels = $this->neo->get_relations($id);
 
-        $endNodes = array_map(function ($rel) {
-            return $rel->getEndNode();
-        }, $rels);
+        $endNodes = $this->getEndNodes($rels);
 
         $nodes['Agentes'] = array();
         foreach ($endNodes as $key => $node){
@@ -50,7 +54,33 @@ class Main extends CI_Controller {
 
         $nodes['Evento'] = $startNode->getProperties();
 
-        $this->load->view('edit', $nodes);
+        return $nodes;
+    }
+
+    private function getEndNodes($rels){
+        return array_map(function ($rel) {
+            return $rel->getEndNode();
+        }, $rels);
+    }
+
+    public function atualizar($id){
+        $form = $this->input->post();
+
+        $startNode = $this->neo->get_node($id);
+        $rels = $this->neo->get_relations($id);
+
+        $nodes = $this->getEndNodes($rels);
+
+        foreach ($nodes as $key => $node){
+            $label = $this->neo->get_label($node->getId());
+            $labName = $label[0]->getName();
+
+            if($labName == 'Agentes'){
+                $this->neo->remove_node($node->getId());
+            }
+        }
+
+
     }
 
     public function inserir(){
