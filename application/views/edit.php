@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 <div class="container-fluid">
     <div style="width: 50%; margin: 20px auto">
-        <form method="POST" action="/grafos/Main/atualizar">
+        <form method="POST" action="/grafos/Main/atualizar/<?=$id?>">
             <h4>Editar Evento</h4>
             <br>
             <div class="form-group">

@@ -29,7 +29,7 @@ class Main extends CI_Controller {
 
     public function editar($id){
         $nodes = $this->getNodes($id);
-
+        $nodes['id'] = $id;
         $this->load->view('edit', $nodes);
     }
 
@@ -64,26 +64,25 @@ class Main extends CI_Controller {
     }
 
     public function atualizar($id){
-        $form = $this->input->post();
-
-        $startNode = $this->neo->get_node($id);
         $rels = $this->neo->get_relations($id);
 
         $nodes = $this->getEndNodes($rels);
 
-        foreach ($nodes as $key => $node){
-            $label = $this->neo->get_label($node->getId());
-            $labName = $label[0]->getName();
-
-            if($labName == 'Agentes'){
-                $this->neo->remove_node($node->getId());
-            }
+        foreach ($rels as $rel){
+            $this->neo->delete_relation($rel->getId());
         }
 
+        foreach ($nodes as $key => $node){
+            $this->neo->remove_node($node->getId());
+        }
 
+        $this->neo->remove_node($id);
+        $this->inserir(false);
+
+        echo "<script>window.location.href = '/grafos';</script>";
     }
 
-    public function inserir(){
+    public function inserir($msg = true){
         $form = $this->input->post();
 
         $evento = $this->neo->insert('Evento',
@@ -131,6 +130,8 @@ class Main extends CI_Controller {
             $this->neo->add_relation($evento, $agente, 'agente');
         }
 
-        print('Inserção realizada com sucesso');
+        if($msg){
+            echo "<script>window.location.href = '/grafos';</script>";
+        }
     }
 }
