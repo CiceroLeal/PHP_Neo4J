@@ -64,6 +64,17 @@ class Main extends CI_Controller {
     }
 
     public function atualizar($id){
+        $this->removeEvento($id, false);
+        $this->inserir(false);
+
+        echo "<script>window.location.href = '/grafos';</script>";
+    }
+
+    public function excluir($id){
+        $this->removeEvento($id);
+    }
+
+    private function removeEvento($id, $msg = true){
         $rels = $this->neo->get_relations($id);
 
         $nodes = $this->getEndNodes($rels);
@@ -77,9 +88,10 @@ class Main extends CI_Controller {
         }
 
         $this->neo->remove_node($id);
-        $this->inserir(false);
 
-        echo "<script>window.location.href = '/grafos';</script>";
+        if($msg){
+            echo "<script>window.location.href = '/grafos';</script>";
+        }
     }
 
     public function inserir($msg = true){

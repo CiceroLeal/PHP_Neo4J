@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <td><?php echo $evento[$i]['conteudo'] ?></td>
                         <td>
                             <a href="/grafos/Main/Editar/<?= $evento[$i]['id']?>"><span class="fa fa-edit acao"></span></a>
-                            <a><span class="fa fa-times acao"></span></a>
+                            <a href="/grafos/Main/Excluir/<?= $evento[$i]['id']?>"><span class="fa fa-times acao"></span></a>
                         </td>
                     </tr>
             <?php
