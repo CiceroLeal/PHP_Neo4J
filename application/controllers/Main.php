@@ -48,7 +48,7 @@ class Main extends CI_Controller {
             if($labName == 'Agentes'){
                 array_push($nodes['Agentes'], $props['content']);
             }else{
-                $nodes[$labName] = $props['content'];
+                $nodes[$labName] = isset($props['content']) ? $props['content'] : $props;
             }
         }
 
@@ -106,7 +106,8 @@ class Main extends CI_Controller {
 
         $periodo = $this->neo->insert('Periodo',
             array(
-                'content' => $form['periodo'],
+                'de' => $form['periodo1'],
+                'ate' => $form['periodo2'],
             )
         );
 

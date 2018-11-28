@@ -20,7 +20,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="form-group">
                 <label> Período </label>
-                <input type="text" class="form-control" name="periodo"/>
+                <div class="row">
+                    <div class="col-md-6">
+                        de: <input type="number" class="form-control" name="periodo1"/>
+                    </div>
+                    <div class="col-md-6">
+                        até: <input type="number" class="form-control" name="periodo2"/>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label> Localização </label>
