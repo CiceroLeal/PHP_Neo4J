@@ -35,8 +35,7 @@ class Main extends CI_Controller {
                     $evento[$labName] = isset($pro['content']) ? $pro['content'] : $pro;
                 }
             }
-
-            $periodos[$key] = $evento['Periodo']['de'];
+            array_push($periodos, $evento['Periodo']['de']);
             array_push($props['eventos'], $evento);
         }
 
