@@ -11,17 +11,52 @@ class Main extends CI_Controller {
     public function index(){
         $nodes = $this->neo->get_label_nodes('Evento');
 
+        $props['eventos'] = array();
+
+        $periodos = array();
+
+        foreach ($nodes as $key => $startNode){
+            $id = $startNode->getId();
+            $rels = $this->neo->get_relations($id);
+            $endNodes = $this->getEndNodes($rels);
+
+            $evento = $startNode->getProperties();
+
+            $evento['id'] = $id;
+            $evento['Agentes'] = array();
+            foreach ($endNodes as $key => $node){
+                $pro = $node->getProperties();
+                $label = $this->neo->get_label($node->getId());
+                $labName = $label[0]->getName();
+
+                if($labName == 'Agentes'){
+                    array_push($evento['Agentes'], $pro['content']);
+                }else{
+                    $evento[$labName] = isset($pro['content']) ? $pro['content'] : $pro;
+                }
+            }
+
+            $periodos[$key] = $evento['Periodo']['de'];
+            array_push($props['eventos'], $evento);
+        }
+
+        array_multisort($periodos, SORT_ASC, $props['eventos']);
+
+        $this->load->view('index', $props);
+	}
+
+	public function tabela(){
+        $nodes = $this->neo->get_label_nodes('Evento');
         $props['evento'] = array();
 
         foreach ($nodes as $key => $node){
             $evento = $node->getProperties();
             $evento['id'] = $node->getId();
-
             array_push($props['evento'], $evento);
         }
 
-        $this->load->view('index', $props);
-	}
+        $this->load->view('tabela', $props);
+    }
 
 	public function criar(){
         $this->load->view('create');
